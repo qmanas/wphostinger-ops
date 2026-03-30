@@ -77,7 +77,7 @@ def zip_directory(directory_path, zip_path):
 
 def update_plugin_version(version_str, local_dir):
     """Update the version number in the main plugin file."""
-    plugin_file = os.path.join(local_dir, 'm2m-suite.php')
+    plugin_file = os.path.join(local_dir, 'syncModule-suite.php')
     
     print(f"🔍 Updating version in: {plugin_file}")
     
@@ -98,7 +98,7 @@ def update_plugin_version(version_str, local_dir):
         
         # Update version constant
         content = re.sub(
-            r"(define\('M2M_SUITE_VERSION',\s*')\d+\.\d+\.\d+('\))",
+            r"(define\('syncModule_SUITE_VERSION',\s*')\d+\.\d+\.\d+('\))",
             lambda m: m.group(1) + version_str + m.group(2),
             content
         )
@@ -120,14 +120,14 @@ def download_current_version(server, port, username, password, site='woven', loc
     try:
         os.makedirs(local_download_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        zip_filename = f"m2m-suite-{site}-backup-{timestamp}.zip"
+        zip_filename = f"syncModule-suite-{site}-backup-{timestamp}.zip"
         local_zip_path = os.path.join(local_download_dir, zip_filename)
         
         print(f"🔍 Connecting to {site} server to download current version...")
         ssh = create_ssh_client(server, port, username, password)
         
-        temp_dir = f"/tmp/m2m-suite-backup-{timestamp}"
-        remote_base_dir = f"domains/m2m{site}.com/public_html/wp-content/plugins/m2m-suite"
+        temp_dir = f"/tmp/syncModule-suite-backup-{timestamp}"
+        remote_base_dir = f"domains/syncModule{site}.com/public_html/wp-content/plugins/syncModule-suite"
         
         commands = [
             f"mkdir -p {temp_dir}",
@@ -160,7 +160,7 @@ def download_current_version(server, port, username, password, site='woven', loc
             ssh.close()
 
 def main():
-    parser = argparse.ArgumentParser(description='Deploy M2M Suite')
+    parser = argparse.ArgumentParser(description='Deploy syncModule Suite')
     parser.add_argument('-m', '--patch', action='store_true', help='Create a patch version (x.y.z+1)')
     parser.add_argument('-M', '--minor', action='store_true', help='Create a minor version (x.y+1.0)')
     parser.add_argument('-S', '--major', action='store_true', help='Create a major version (x+1.0.0)')
@@ -181,7 +181,7 @@ def main():
         version_str = get_next_version(current_version)
         version_type = 'patch'
 
-    print(f"🚀 Deploying M2M Suite version: {version_str} ({version_type} update)")
+    print(f"🚀 Deploying syncModule Suite version: {version_str} ({version_type} update)")
 
     load_dotenv()
     
@@ -196,7 +196,7 @@ def main():
         download_current_version(server, port, username, password, site='knit')
         return
     
-    local_dir = os.path.join(os.getcwd(), "m2m-suite")
+    local_dir = os.path.join(os.getcwd(), "syncModule-suite")
     
     if not os.path.exists(local_dir):
         print(f"❌ Error: Local directory not found: {local_dir}")
@@ -215,7 +215,7 @@ def main():
             # Limit message length to 50 characters
             safe_message = safe_message[:50]
             
-        zip_filename = f"m2m-suite-{version_str}{safe_message}.zip"
+        zip_filename = f"syncModule-suite-{version_str}{safe_message}.zip"
         zip_path = os.path.join(temp_dir, zip_filename)
         zip_directory(local_dir, zip_path)
         
@@ -243,7 +243,7 @@ def main():
             }
             version_info['deployments'].append(deployment)
             save_version_info(version_info)
-            print(f"✅ Successfully deployed M2M Suite {version_str} to both sites")
+            print(f"✅ Successfully deployed syncModule Suite {version_str} to both sites")
         else:
             print("❌ One or more deployments failed. Check logs for details.")
             return 1
@@ -252,8 +252,8 @@ def main():
 
 def deploy_to_server(server, port, username, password, local_zip_path, version_str, site, version_type, message):
     """Deploy the plugin to a specific site."""
-    remote_base_dir = f"domains/m2m{site}.com/public_html/wp-content/plugins/m2m-suite"
-    print(f"🚀 Uploading to m2m{site}.com...")
+    remote_base_dir = f"domains/syncModule{site}.com/public_html/wp-content/plugins/syncModule-suite"
+    print(f"🚀 Uploading to syncModule{site}.com...")
     
     try:
         ssh = create_ssh_client(server, port, username, password)
@@ -263,7 +263,7 @@ def deploy_to_server(server, port, username, password, local_zip_path, version_s
         ssh.exec_command(f'mkdir -p {remote_base_dir}')
         
         # Upload the zip file
-        remote_zip_path = f"/tmp/m2m-suite-{version_str}.zip"
+        remote_zip_path = f"/tmp/syncModule-suite-{version_str}.zip"
         scp.put(local_zip_path, remote_zip_path)
         
         # Extract the new version
@@ -274,11 +274,11 @@ def deploy_to_server(server, port, username, password, local_zip_path, version_s
         ssh.exec_command(f'chmod -R 755 {remote_base_dir}')
         ssh.exec_command(f'chown -R {username}:{username} {remote_base_dir}')
         
-        print(f"✅ Successfully deployed M2M Suite {version_str} to m2m{site}.com")
+        print(f"✅ Successfully deployed syncModule Suite {version_str} to syncModule{site}.com")
         return True
         
     except Exception as e:
-        print(f"❌ Deployment to m2m{site}.com failed: {str(e)}")
+        print(f"❌ Deployment to syncModule{site}.com failed: {str(e)}")
         import traceback
         print(f"🔍 Error details: {traceback.format_exc()}")
         return False

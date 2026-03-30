@@ -9,9 +9,9 @@ import re
 from datetime import datetime
 
 # Paths
-LOCAL_SITE_PATH = "/Users/manas/Local Sites/the-dehati-project/app/public"
-LOCAL_CONF_PATH = "/Users/manas/Local Sites/the-dehati-project/conf/mysql"
-OUTPUT_DIR = "/Users/manas/Documents/AlphaCentuari/dehati-project-wp/database-exports"
+LOCAL_SITE_PATH = "/Users/developer/Local Sites/the-dehati-project/app/public"
+LOCAL_CONF_PATH = "/Users/developer/Local Sites/the-dehati-project/conf/mysql"
+OUTPUT_DIR = "/Users/developer/projects/dehati-project-wp/database-exports"
 
 def export_database():
     """Export database using mysqldump from Local's MySQL."""
