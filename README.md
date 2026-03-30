@@ -1,5 +1,8 @@
 # 🚀 WPHostinger Ops: Automated WordPress Sync & Deploy
 
+> **[Self-Contained Workflow Utility]**
+> *A fully functional, CLI-driven deployment suite used to bypass Hostinger's manual file manager for automated WordPress theme, plugin, and database synchronization.*
+
 A Python-based deployment and sync suite for Hostinger. This collection of scripts automates the versioning and synchronization of WordPress themes, plugins, and databases, reducing manual errors during deployment.
 
 - ⚙️ **Theme/Plugin Sync**: Logic for pushing and pulling local files to a Hostinger server.
